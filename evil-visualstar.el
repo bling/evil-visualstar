@@ -1,13 +1,14 @@
 ;;; evil-visualstar.el --- Starts a * or # search from the visual selection
 
 ;; Copyright (C) 2013 by Bailey Ling
+;; Author: Bailey Ling
+;; URL: https://github.com/bling/evil-visualstar
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
-;; Author: Bailey Ling
 ;; Created: 2013-09-24
 ;; Version: 0.0.0
-;; Keywords: evil visualstar
-;; Package-Requires: (evil)
+;; Keywords: evil vim visualstar
+;; Package-Requires: ((evil "0"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
