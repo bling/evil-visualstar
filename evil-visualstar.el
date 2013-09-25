@@ -6,7 +6,7 @@
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
 ;; Created: 2013-09-24
-;; Version: 0.0.0
+;; Version: 0.0.1
 ;; Keywords: evil vim visualstar
 ;; Package-Requires: ((evil "0"))
 ;;
@@ -30,6 +30,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Commentary:
+;;
+;; Install:
+;; (require 'evil-visualstar)
+;;
+;; Usage:
+;;
+;; Make a visual selection with `v` or `V`, and then hit `*` to search
+;; the selection forward, or # to search that selection backward.
 
 ;;; Code:
 
@@ -67,5 +75,4 @@
 (define-key evil-visual-state-map (kbd "#") 'evil-visualstar/begin-search-backward)
 
 (provide 'evil-visualstar)
-
 ;;; evil-visualstar.el ends here
