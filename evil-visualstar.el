@@ -52,13 +52,13 @@
 
 ;;;###autoload
 (defun evil-visualstar/begin-search-forward (beg end)
-  "Search for the visual selection in forward direction."
+  "Search for the visual selection forwards."
   (interactive "r")
   (evil-visualstar/begin-search beg end t))
 
 ;;;###autoload
 (defun evil-visualstar/begin-search-backward (beg end)
-  "Search for the visual selection in backward direction."
+  "Search for the visual selection backwards."
   (interactive "r")
   (evil-visualstar/begin-search beg end nil))
 
