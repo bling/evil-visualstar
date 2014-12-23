@@ -6,7 +6,7 @@
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
 ;; Created: 2013-09-24
-;; Version: 0.0.1
+;; Version: 0.1.0
 ;; Keywords: evil vim visualstar
 ;; Package-Requires: ((evil "0"))
 ;;
@@ -36,6 +36,8 @@
 ;;
 ;; Usage:
 ;;
+;; (global-evil-visualstar-mode t)
+;;
 ;; Make a visual selection with `v` or `V`, and then hit `*` to search
 ;; the selection forward, or # to search that selection backward.
 
@@ -43,7 +45,6 @@
 
 (require 'evil)
 
-;;;###autoload
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
@@ -59,20 +60,40 @@
           (evil-ex-search-activate-highlight pattern)
           (evil-ex-search-next))))))
 
-;;;###autoload
 (defun evil-visualstar/begin-search-forward (beg end)
   "Search for the visual selection forwards."
   (interactive "r")
   (evil-visualstar/begin-search beg end t))
 
-;;;###autoload
 (defun evil-visualstar/begin-search-backward (beg end)
   "Search for the visual selection backwards."
   (interactive "r")
   (evil-visualstar/begin-search beg end nil))
 
-(define-key evil-visual-state-map (kbd "*") 'evil-visualstar/begin-search-forward)
-(define-key evil-visual-state-map (kbd "#") 'evil-visualstar/begin-search-backward)
+;;;###autoload
+(define-minor-mode evil-visualstar-mode
+  "Minor mode for visual star selection."
+  :keymap (let ((map (make-sparse-keymap)))
+            (evil-define-key 'visual map (kbd "*") #'evil-visualstar/begin-search-forward)
+            (evil-define-key 'visual map (kbd "#") #'evil-visualstar/begin-search-backward)
+            map)
+  (evil-normalize-keymaps))
+
+;;;###autoload
+(define-globalized-minor-mode global-evil-visualstar-mode
+  evil-visualstar-mode turn-on-evil-visualstar-mode)
+
+;;;###autoload
+(defun turn-on-evil-visualstar-mode ()
+  "Turns on visual star selection."
+  (interactive)
+  (evil-visualstar-mode t))
+
+;;;###autoload
+(defun turn-off-evil-visualstar-mode ()
+  "Turns off visual star selection."
+  (interactive)
+  (evil-visualstar-mode -1))
 
 (provide 'evil-visualstar)
 ;;; evil-visualstar.el ends here
