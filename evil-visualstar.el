@@ -48,17 +48,22 @@
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
-    (let ((selection (regexp-quote (buffer-substring-no-properties beg end))))
+    (let ((found)
+          (selection (regexp-quote (buffer-substring-no-properties beg end))))
       (if (eq evil-search-module 'isearch)
           (progn
             (setq isearch-forward direction)
-            (evil-search selection direction t))
+            (setq found (evil-search selection direction t)))
         (let ((pattern (evil-ex-make-search-pattern selection))
               (direction (if direction 'forward 'backward)))
           (setq evil-ex-search-direction direction)
           (setq evil-ex-search-pattern pattern)
           (evil-ex-search-activate-highlight pattern)
-          (evil-ex-search-next))))))
+          (setq found (evil-ex-search-next))))
+      (when found
+        (push-mark (- (+ end (point)) beg) t)
+        (exchange-point-and-mark)
+        (exchange-point-and-mark)))))
 
 (defun evil-visualstar/begin-search-forward (beg end)
   "Search for the visual selection forwards."
