@@ -58,6 +58,11 @@
           (setq evil-ex-search-direction direction)
           (setq evil-ex-search-pattern pattern)
           (evil-ex-search-activate-highlight pattern)
+        ;; update search history unless this pattern equals the
+        ;; previous pattern
+        (unless (equal (car-safe evil-ex-search-history) selection)
+          (push selection evil-ex-search-history))
+        (evil-push-search-history selection (eq direction 'forward))
           (evil-ex-search-next))))))
 
 (defun evil-visualstar/begin-search-forward (beg end)
