@@ -45,6 +45,11 @@
 
 (require 'evil)
 
+(defvar evil-visualstar/persistent nil
+  "Set to t if * or # should keep visual-mode.
+This allows for repeated use of * in # but keeps vusual mode.
+You'd need to hit escape to leave visual-mode.")
+
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
@@ -59,11 +64,14 @@
           (setq evil-ex-search-direction direction)
           (setq evil-ex-search-pattern pattern)
           (evil-ex-search-activate-highlight pattern)
+          ;; update search history unless this pattern equals the
+          ;; previous pattern
+          (unless (equal (car-safe evil-ex-search-history) selection)
+            (push selection evil-ex-search-history))
+          (evil-push-search-history selection (eq direction 'forward))
           (setq found (evil-ex-search-next))))
-      (when found
-        (push-mark (- (+ end (point)) beg) t)
-        (exchange-point-and-mark)
-        (exchange-point-and-mark)))))
+      (when (and evil-visualstar/persistent found)
+        (push-mark (+ (point) (- end beg)) nil t)))))
 
 (defun evil-visualstar/begin-search-forward (beg end)
   "Search for the visual selection forwards."
