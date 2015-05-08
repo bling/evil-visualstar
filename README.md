@@ -16,7 +16,7 @@ Add `(global-evil-visualstar-mode)` to your configuration.
 Make a visual selection with `v` or `V`, and then hit `*` to search that selection forward, or `#` to search that selection backward.
 
 If the `evil-visualstar/persistent` option is not nil, visual-state will
-remain in effect, allowing for repeated `*` or #`.
+remain in effect, allowing for repeated `*` or `#`.
 
 Note that you than have to exit visualstar-mode before hitting a
 direction key to avoid extending the selection.
