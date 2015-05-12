@@ -6,7 +6,7 @@
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
 ;; Created: 2013-09-24
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Keywords: evil vim visualstar
 ;; Package-Requires: ((evil "0"))
 ;;
@@ -40,15 +40,19 @@
 ;;
 ;; Make a visual selection with `v` or `V`, and then hit `*` to search
 ;; the selection forward, or # to search that selection backward.
+;;
+;; If the evil-visualstar/persistent option is not nil, visual-state
+;; will remain in effect, allowing for repeated * or #.
 
 ;;; Code:
 
 (require 'evil)
 
 (defvar evil-visualstar/persistent nil
-  "Set to t if * or # should keep visual-mode.
-This allows for repeated use of * in # but keeps vusual mode.
-You'd need to hit escape to leave visual-mode.")
+  "Set to `t` if `*` and `#` should keep visual-mode.
+That would visually-select the found occurrence, allowing for
+repeated searches.
+You will need to hit escape to leave visual-mode.")
 
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
