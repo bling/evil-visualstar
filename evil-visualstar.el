@@ -6,7 +6,7 @@
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
 ;; Created: 2013-09-24
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Keywords: evil vim visualstar
 ;; Package-Requires: ((evil "0"))
 ;;
@@ -40,30 +40,42 @@
 ;;
 ;; Make a visual selection with `v` or `V`, and then hit `*` to search
 ;; the selection forward, or # to search that selection backward.
+;;
+;; If the evil-visualstar/persistent option is not nil, visual-state
+;; will remain in effect, allowing for repeated * or #.
 
 ;;; Code:
 
 (require 'evil)
 
+(defvar evil-visualstar/persistent nil
+  "Set to `t` if `*` and `#` should keep visual-mode.
+That would visually-select the found occurrence, allowing for
+repeated searches.
+You will need to hit escape to leave visual-mode.")
+
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
-    (let ((selection (regexp-quote (buffer-substring-no-properties beg end))))
+    (let ((found)
+          (selection (regexp-quote (buffer-substring-no-properties beg end))))
       (if (eq evil-search-module 'isearch)
           (progn
             (setq isearch-forward direction)
-            (evil-search selection direction t))
+            (setq found (evil-search selection direction t)))
         (let ((pattern (evil-ex-make-search-pattern selection))
               (direction (if direction 'forward 'backward)))
           (setq evil-ex-search-direction direction)
           (setq evil-ex-search-pattern pattern)
           (evil-ex-search-activate-highlight pattern)
-        ;; update search history unless this pattern equals the
-        ;; previous pattern
-        (unless (equal (car-safe evil-ex-search-history) selection)
-          (push selection evil-ex-search-history))
-        (evil-push-search-history selection (eq direction 'forward))
-          (evil-ex-search-next))))))
+          ;; update search history unless this pattern equals the
+          ;; previous pattern
+          (unless (equal (car-safe evil-ex-search-history) selection)
+            (push selection evil-ex-search-history))
+          (evil-push-search-history selection (eq direction 'forward))
+          (setq found (evil-ex-search-next))))
+      (when (and evil-visualstar/persistent found)
+        (push-mark (+ (point) (- end beg)) nil t)))))
 
 (defun evil-visualstar/begin-search-forward (beg end)
   "Search for the visual selection forwards."
