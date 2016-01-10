@@ -1,7 +1,7 @@
 evil-visualstar
 ===============
 
-This is a port of one of the many visual-star plugins for Vim to work with [evil-mode](https://gitorious.org/evil).
+This is a port of one of the many visual-star plugins for Vim to work with [evil-mode](https://bitbucket.org/lyro/evil/wiki/Home).
 
 installation
 ============
