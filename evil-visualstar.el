@@ -84,14 +84,14 @@ You will need to hit escape to leave visual-mode."
       (when (and evil-visualstar/persistent found)
         (push-mark (+ (point) (- end beg)) nil t)))))
 
-(evil-define-command evil-visualstar/begin-search-forward (beg end)
+(evil-define-motion evil-visualstar/begin-search-forward (beg end)
   "Search for the visual selection forwards."
   :jump t
   :repeat nil
   (interactive "<r>")
   (evil-visualstar/begin-search beg end t))
 
-(evil-define-command evil-visualstar/begin-search-backward (beg end)
+(evil-define-motion evil-visualstar/begin-search-backward (beg end)
   "Search for the visual selection backwards."
   :jump t
   :repeat nil
