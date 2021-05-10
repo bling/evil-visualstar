@@ -61,6 +61,7 @@ You will need to hit escape to leave visual-mode."
   :group 'evil-visualstar
   :type 'boolean)
 
+;;;###autoload
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
@@ -84,6 +85,7 @@ You will need to hit escape to leave visual-mode."
       (when (and evil-visualstar/persistent found)
         (push-mark (+ (point) (- end beg)) nil t)))))
 
+;;;###autoload
 (evil-define-motion evil-visualstar/begin-search-forward (beg end)
   "Search for the visual selection forwards."
   :jump t
@@ -91,6 +93,7 @@ You will need to hit escape to leave visual-mode."
   (interactive "<r>")
   (evil-visualstar/begin-search beg end t))
 
+;;;###autoload
 (evil-define-motion evil-visualstar/begin-search-backward (beg end)
   "Search for the visual selection backwards."
   :jump t
