@@ -1,4 +1,4 @@
-;;; evil-visualstar.el --- Starts a * or # search from the visual selection
+;;; evil-visualstar.el --- Starts a * or # search from the visual selection -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2013 by Bailey Ling
 ;; Author: Bailey Ling
@@ -70,7 +70,16 @@ You will need to hit escape to leave visual-mode."
           (progn
             (setq isearch-forward direction)
             (setq found (evil-search selection direction t)))
-        (let ((pattern (evil-ex-make-search-pattern selection))
+        (let ((pattern (let ((vim-style? evil-ex-search-vim-style-regexp)
+                             evil-ex-search-vim-style-regexp)
+                         (prog1
+                             (evil-ex-make-search-pattern selection)
+                           (when vim-style?
+                             (setq selection
+                                   (replace-regexp-in-string
+                                    "[{}]"
+                                    "\\\\\\&"
+                                    selection))))))
               (direction (if direction 'forward 'backward)))
           (setq evil-ex-search-direction direction)
           (setq evil-ex-search-pattern pattern)
