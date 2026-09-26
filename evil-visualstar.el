@@ -1,14 +1,14 @@
-;;; evil-visualstar.el --- Starts a * or # search from the visual selection
+;;; evil-visualstar.el --- Starts a * or # search from the visual selection  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2013 by Bailey Ling
+;; Copyright (C) 2013-2026 by Bailey Ling
 ;; Author: Bailey Ling
 ;; URL: https://github.com/bling/evil-visualstar
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
 ;; Created: 2013-09-24
-;; Version: 0.2.0
+;; Version: 0.2.1
 ;; Keywords: evil vim visualstar
-;; Package-Requires: ((evil "0"))
+;; Package-Requires: ((emacs "24.4") (evil "0"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -61,6 +61,12 @@ You will need to hit escape to leave visual-mode."
   :group 'evil-visualstar
   :type 'boolean)
 
+(defvar evil-visualstar/mode-map (make-sparse-keymap))
+
+(evil-define-key 'visual evil-visualstar/mode-map
+  (kbd "*") #'evil-visualstar/begin-search-forward
+  (kbd "#") #'evil-visualstar/begin-search-backward)
+
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
@@ -70,13 +76,13 @@ You will need to hit escape to leave visual-mode."
           (progn
             (setq isearch-forward direction)
             (setq found (evil-search selection direction t)))
-        (let ((pattern (evil-ex-make-search-pattern selection))
+        (let ((pattern (let (evil-ex-search-vim-style-regexp)
+                         (evil-ex-make-search-pattern selection)))
               (direction (if direction 'forward 'backward)))
           (setq evil-ex-search-direction direction)
           (setq evil-ex-search-pattern pattern)
           (evil-ex-search-activate-highlight pattern)
-          ;; update search history unless this pattern equals the
-          ;; previous pattern
+          ;; update search history unless this pattern equals the previous pattern
           (unless (equal (car-safe evil-ex-search-history) selection)
             (push selection evil-ex-search-history))
           (evil-push-search-history selection (eq direction 'forward))
@@ -101,10 +107,7 @@ You will need to hit escape to leave visual-mode."
 ;;;###autoload
 (define-minor-mode evil-visualstar-mode
   "Minor mode for visual star selection."
-  :keymap (let ((map (make-sparse-keymap)))
-            (evil-define-key 'visual map (kbd "*") #'evil-visualstar/begin-search-forward)
-            (evil-define-key 'visual map (kbd "#") #'evil-visualstar/begin-search-backward)
-            map)
+  :keymap evil-visualstar/mode-map
   (evil-normalize-keymaps))
 
 ;;;###autoload
