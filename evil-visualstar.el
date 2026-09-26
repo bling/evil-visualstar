@@ -6,7 +6,7 @@
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
 ;; Created: 2013-09-24
-;; Version: 0.2.1
+;; Version: 0.2.2
 ;; Keywords: evil vim visualstar
 ;; Package-Requires: ((emacs "24.4") (evil "0"))
 ;;
