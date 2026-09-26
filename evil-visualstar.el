@@ -58,35 +58,34 @@
 That would visually-select the found occurrence, allowing for
 repeated searches.
 You will need to hit escape to leave visual-mode."
-  :group 'evil-visualstar
   :type 'boolean)
 
-(defvar evil-visualstar/mode-map (make-sparse-keymap))
+(defvar evil-visualstar-mode-map (make-sparse-keymap))
 
-(evil-define-key 'visual evil-visualstar/mode-map
+(evil-define-key 'visual evil-visualstar-mode-map
   (kbd "*") #'evil-visualstar/begin-search-forward
   (kbd "#") #'evil-visualstar/begin-search-backward)
 
 (defun evil-visualstar/begin-search (beg end direction)
   (when (evil-visual-state-p)
     (evil-exit-visual-state)
-    (let ((found)
-          (selection (regexp-quote (buffer-substring-no-properties beg end))))
-      (if (eq evil-search-module 'isearch)
-          (progn
-            (setq isearch-forward direction)
-            (setq found (evil-search selection direction t)))
-        (let ((pattern (let (evil-ex-search-vim-style-regexp)
-                         (evil-ex-make-search-pattern selection)))
-              (direction (if direction 'forward 'backward)))
-          (setq evil-ex-search-direction direction)
-          (setq evil-ex-search-pattern pattern)
-          (evil-ex-search-activate-highlight pattern)
-          ;; update search history unless this pattern equals the previous pattern
-          (unless (equal (car-safe evil-ex-search-history) selection)
-            (push selection evil-ex-search-history))
-          (evil-push-search-history selection (eq direction 'forward))
-          (setq found (evil-ex-search-next))))
+    (let* ((selection (regexp-quote (buffer-substring-no-properties beg end)))
+           (found
+            (if (eq evil-search-module 'isearch)
+                (progn
+                  (setq isearch-forward direction)
+                  (evil-search selection direction t))
+              (let ((pattern (let (evil-ex-search-vim-style-regexp)
+                               (evil-ex-make-search-pattern selection)))
+                    (direction (if direction 'forward 'backward)))
+                (setq evil-ex-search-direction direction)
+                (setq evil-ex-search-pattern pattern)
+                (evil-ex-search-activate-highlight pattern)
+                ;; Update search history unless this pattern equals the previous pattern
+                (unless (equal (car-safe evil-ex-search-history) selection)
+                  (push selection evil-ex-search-history))
+                (evil-push-search-history selection (eq direction 'forward))
+                (evil-ex-search-next)))))
       (when (and evil-visualstar/persistent found)
         (push-mark (+ (point) (- end beg)) nil t)))))
 
@@ -107,22 +106,19 @@ You will need to hit escape to leave visual-mode."
 ;;;###autoload
 (define-minor-mode evil-visualstar-mode
   "Minor mode for visual star selection."
-  :keymap evil-visualstar/mode-map
+  :keymap evil-visualstar-mode-map
   (evil-normalize-keymaps))
 
 ;;;###autoload
 (define-globalized-minor-mode global-evil-visualstar-mode
-  evil-visualstar-mode turn-on-evil-visualstar-mode)
+  evil-visualstar-mode evil-visualstar-mode)
 
 ;;;###autoload
-(defun turn-on-evil-visualstar-mode ()
-  "Turns on visual star selection."
-  (interactive)
-  (evil-visualstar-mode t))
+(define-obsolete-function-alias 'turn-on-evil-visualstar-mode
+  #'evil-visualstar-mode "2026")
 
-;;;###autoload
 (defun turn-off-evil-visualstar-mode ()
-  "Turns off visual star selection."
+  "Turn off visual star selection."
   (interactive)
   (evil-visualstar-mode -1))
 
