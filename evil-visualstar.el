@@ -2,6 +2,7 @@
 
 ;; Copyright (C) 2013-2026 by Bailey Ling
 ;; Author: Bailey Ling
+;; Maintainer: Bailey Ling <bling@live.ca>
 ;; URL: https://github.com/bling/evil-visualstar
 ;; Filename: evil-visualstar.el
 ;; Description: Starts a * or # search from the visual selection
